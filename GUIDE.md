@@ -84,10 +84,20 @@ This creates a reusable "Algorithm GPT" you can use anytime. Requires a paid Cha
 
 ## Google Gemini
 
+### Option A: Create a Gem (recommended)
+
+Requires Gemini Advanced (Google One AI Premium plan).
+
 1. Go to [gemini.google.com](https://gemini.google.com) and log in
-2. Click **Settings** (gear icon), then find **Extensions** or **Gems**
-3. Create a new Gem, paste the contents of `the-algorithm.md` into the instructions
-4. Or: start a conversation, paste the contents, and say "Use this framework"
+2. In the left sidebar, click **Gem manager**, then **New Gem**
+3. Name it "The Algorithm"
+4. Paste the contents of `the-algorithm.md` into the **Custom Instructions** field
+5. Click **Save** — the Gem appears in your sidebar for reuse
+
+### Option B: Paste into a conversation
+
+1. Start a new conversation on [gemini.google.com](https://gemini.google.com)
+2. Paste the contents of `the-algorithm.md` and say "Use this framework"
 
 ---
 

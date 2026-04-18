@@ -397,6 +397,104 @@ canvas#dust {
 }
 .code-block .cmd { color: var(--orange); }
 
+/* ── SETUP GUIDE ── */
+.guide-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.guide-card {
+  background: var(--ink);
+}
+.guide-card summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px;
+  cursor: pointer;
+  list-style: none;
+  transition: background .2s;
+}
+.guide-card summary::-webkit-details-marker { display: none; }
+.guide-card summary:hover { background: var(--mid); }
+.guide-card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--cream);
+}
+.guide-card-note {
+  font-size: 10px;
+  letter-spacing: .5px;
+  color: rgba(242,237,228,.3);
+  margin-left: auto;
+}
+.guide-card-arrow {
+  font-size: 14px;
+  color: var(--orange);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.guide-card[open] .guide-card-arrow { transform: rotate(90deg); }
+.guide-card-body {
+  padding: 0 24px 28px 24px;
+}
+.guide-card-body h4 {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: .5px;
+  margin: 20px 0 10px;
+}
+.guide-card-body h4:first-child { margin-top: 4px; }
+.guide-card-body ol {
+  margin: 0;
+  padding-left: 20px;
+}
+.guide-card-body ol li {
+  font-size: 12px;
+  line-height: 2;
+  color: rgba(242,237,228,.5);
+  letter-spacing: .2px;
+}
+.guide-card-body ol li strong {
+  color: rgba(242,237,228,.75);
+  font-weight: 700;
+}
+.guide-card-body ol li code {
+  color: var(--orange);
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+}
+.guide-card-body .guide-tip {
+  font-size: 11px;
+  line-height: 1.8;
+  color: rgba(242,237,228,.35);
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+.guide-card-body .guide-tip strong {
+  color: rgba(242,237,228,.55);
+}
+.guide-instruction-block {
+  background: var(--mid);
+  border: 1px solid rgba(255,255,255,.07);
+  border-left: 2px solid var(--orange);
+  padding: 14px 18px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: rgba(242,237,228,.55);
+  line-height: 1.7;
+  margin-top: 10px;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 /* ── WHY ── */
 .quote-block {
   border-left: 3px solid var(--orange);
@@ -725,6 +823,139 @@ canvas#dust {
             <div class="usage-detail">The output quality scales with context. In Claude Desktop, connect it to your Notion, Linear, or local files. The skill is much sharper when it's working from the real situation — the Slack thread where scope crept, the ticket that's been open for three weeks.</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETUP GUIDE -->
+  <section class="section" id="setup">
+    <div class="section-inner">
+      <div class="section-label">Set up your tool</div>
+      <p class="body-text" style="margin-bottom:12px;">You need one file: <code style="color:var(--orange);font-size:11px">dist/the-algorithm.md</code> from the <a href="https://github.com/jordanjoecooper/the-algorithm" style="color:var(--orange);text-decoration:none;border-bottom:1px solid rgba(232,72,32,.3);">GitHub repo</a>. Download it, then follow the steps for your tool.</p>
+      <p class="body-text" style="margin-bottom:32px;">Every platform works slightly differently, but the idea is the same: give your AI the file so it knows how to think, then give it something real to work on.</p>
+
+      <div class="guide-cards">
+
+        <details class="guide-card">
+          <summary>
+            <span class="guide-card-name">Claude</span>
+            <span class="guide-card-note">claude.ai or Desktop app &middot; Pro plan recommended</span>
+            <span class="guide-card-arrow">&#9654;</span>
+          </summary>
+          <div class="guide-card-body">
+            <h4>Option A: Add to a Project (recommended)</h4>
+            <ol>
+              <li>Go to <strong>claude.ai</strong> and log in</li>
+              <li>In the left sidebar, click <strong>Projects</strong>, then <strong>Create Project</strong></li>
+              <li>Name it something like "The Algorithm"</li>
+              <li>In the project panel, find <strong>Project Knowledge</strong> and click <strong>Add content</strong></li>
+              <li>Upload <code>the-algorithm.md</code>, or paste its contents into <strong>Set custom instructions</strong></li>
+              <li>Start a new conversation inside the project &mdash; The Algorithm is loaded automatically</li>
+            </ol>
+            <div class="guide-tip"><strong>Why Projects?</strong> Every conversation in the project starts with The Algorithm loaded. You don't have to re-upload the file each time. Requires a Pro, Team, or Enterprise plan.</div>
+
+            <h4>Option B: Upload in a single conversation</h4>
+            <ol>
+              <li>Start a new conversation on <strong>claude.ai</strong> (works on the free plan)</li>
+              <li>Click the <strong>paperclip icon</strong> and attach <code>the-algorithm.md</code></li>
+              <li>Say something like: "Use The Algorithm framework in this file. Score our onboarding process."</li>
+            </ol>
+            <div class="guide-tip">This works on the free tier, but the file only applies to that single conversation.</div>
+          </div>
+        </details>
+
+        <details class="guide-card">
+          <summary>
+            <span class="guide-card-name">ChatGPT</span>
+            <span class="guide-card-note">Custom GPT or conversation upload</span>
+            <span class="guide-card-arrow">&#9654;</span>
+          </summary>
+          <div class="guide-card-body">
+            <h4>Option A: Create a Custom GPT (recommended)</h4>
+            <ol>
+              <li>Go to <strong>chatgpt.com/create</strong> and log in (requires a Plus, Team, or Enterprise plan)</li>
+              <li>Click the <strong>Configure</strong> tab</li>
+              <li>Set the name to <strong>"The Algorithm"</strong></li>
+              <li>In the <strong>Instructions</strong> field, paste this short prompt:</li>
+            </ol>
+            <div class="guide-instruction-block">You apply The Algorithm — a five-step optimization framework. Your knowledge file contains the full detailed process for each step. Always reference it.
+
+The five steps, in order, every time:
+1. Question every requirement — each should come with a name attached
+2. Delete every possible step — if you're not adding back 10%, you didn't delete enough
+3. Simplify and optimize — but not before steps 1-2
+4. Accelerate cycle time — but not before step 3
+5. Automate — but not before step 4
+
+The steps are sequential. Never skip ahead. If the user jumps to a later step, flag the risk, then proceed if they insist.
+
+Tone: Direct, concrete, no jargon. Name specific things. Ask "why" before "how." Challenge politely but relentlessly. Output structured artifacts (tables, scorecards), not essays.
+
+The user can ask you to:
+- Run the full Algorithm (all 5 steps in order)
+- Run a single step (e.g. "question my requirements")
+- Score something (quick diagnostic against all 5 steps)
+
+At each step, present structured output, then ask the user at least one question before moving on. They have context you don't.</div>
+            <ol start="5">
+              <li>Under <strong>Knowledge</strong>, click <strong>Upload files</strong> and upload <code>the-algorithm.md</code></li>
+              <li>Under <strong>Capabilities</strong>, enable <strong>Web Search</strong> and <strong>Canvas</strong>. Disable the rest.</li>
+              <li>Click <strong>Save</strong> and choose who can access it</li>
+            </ol>
+            <div class="guide-tip"><strong>Why the split?</strong> ChatGPT limits Instructions to 8,000 characters. The full Algorithm file is ~33,000 characters. The short prompt goes in Instructions; the full detail goes in Knowledge where the GPT can reference it.</div>
+
+            <h4>Option B: Upload in a single conversation</h4>
+            <ol>
+              <li>Start a new conversation on <strong>chatgpt.com</strong> (works on the free plan)</li>
+              <li>Click the <strong>paperclip icon</strong> and upload <code>the-algorithm.md</code></li>
+              <li>Say: "Use the framework in this file to help me optimize my process"</li>
+            </ol>
+            <div class="guide-tip">This works on the free tier. The file is treated as conversation context, not a persistent system prompt.</div>
+          </div>
+        </details>
+
+        <details class="guide-card">
+          <summary>
+            <span class="guide-card-name">Google Gemini</span>
+            <span class="guide-card-note">Gems &middot; Gemini Advanced</span>
+            <span class="guide-card-arrow">&#9654;</span>
+          </summary>
+          <div class="guide-card-body">
+            <h4>Option A: Create a Gem (recommended)</h4>
+            <ol>
+              <li>Go to <strong>gemini.google.com</strong> and log in</li>
+              <li>In the left sidebar, click <strong>Gem manager</strong>, then <strong>New Gem</strong></li>
+              <li>Name it "The Algorithm"</li>
+              <li>Paste the contents of <code>the-algorithm.md</code> into the <strong>Custom Instructions</strong> field</li>
+              <li>Click <strong>Save</strong> &mdash; the Gem appears in your sidebar for reuse</li>
+            </ol>
+            <div class="guide-tip">Gems are available on Gemini Advanced (Google One AI Premium plan). The Gem instructions persist across conversations.</div>
+
+            <h4>Option B: Paste into a conversation</h4>
+            <ol>
+              <li>Start a new conversation on <strong>gemini.google.com</strong></li>
+              <li>Paste the contents of <code>the-algorithm.md</code> and say: "Use this framework"</li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="guide-card">
+          <summary>
+            <span class="guide-card-name">Other Tools</span>
+            <span class="guide-card-note">Copilot, Grok, Perplexity, local models, API</span>
+            <span class="guide-card-arrow">&#9654;</span>
+          </summary>
+          <div class="guide-card-body">
+            <h4>Any tool with custom instructions or file upload</h4>
+            <ol>
+              <li>Find the <strong>custom instructions</strong>, <strong>system prompt</strong>, or <strong>file upload</strong> feature in your AI tool</li>
+              <li>Paste the contents of <code>the-algorithm.md</code> or upload the file</li>
+              <li>Start asking it to question, delete, simplify, accelerate, or automate</li>
+            </ol>
+            <div class="guide-tip">The file is plain markdown. It works with any AI tool that accepts text instructions &mdash; Copilot, Grok, Perplexity, Ollama, LM Studio, or any API that supports system prompts. For API use, pass the file contents as the system message.</div>
+          </div>
+        </details>
+
       </div>
     </div>
   </section>
