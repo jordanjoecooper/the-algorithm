@@ -26,13 +26,15 @@ Five steps. In order. Every time.
 
 Works with **Claude**, **ChatGPT**, **Gemini**, or any AI tool that accepts custom instructions.
 
+**[Try it now on ChatGPT](https://chatgpt.com/g/g-69e003e0e2c881918512852dc65e04bd-the-algorithm)** — a ready-made GPT, no setup required.
+
+Or set it up in your own tool:
+
 1. Download [`dist/the-algorithm.md`](dist/the-algorithm.md)
 2. Upload it or paste it into your AI tool
 3. Give it real documents, processes, and data to work on
 
-**[Setup guide and website](https://jordanjoecooper.github.io/the-algorithm)** — step-by-step instructions for each platform, with screenshots.
-
-Or see the [text guide](GUIDE.md) if you prefer markdown.
+**[Setup guide and website](https://jordanjoecooper.github.io/the-algorithm)** — step-by-step instructions for each platform. Or see the [text guide](GUIDE.md).
 
 ## Claude Code
 

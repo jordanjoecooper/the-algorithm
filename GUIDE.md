@@ -33,9 +33,13 @@ This works for a single conversation.
 
 ## ChatGPT
 
-### Option A: Create a Custom GPT (recommended)
+**Quickest option:** [Use the ready-made Algorithm GPT](https://chatgpt.com/g/g-69e003e0e2c881918512852dc65e04bd-the-algorithm) — no setup required.
 
-This creates a reusable "Algorithm GPT" you can use anytime. Requires a paid ChatGPT plan (Plus, Team, or Enterprise).
+Or create your own:
+
+### Option A: Create your own Custom GPT
+
+This creates a reusable GPT you control. Requires a paid ChatGPT plan (Plus, Team, or Enterprise).
 
 1. Go to [chatgpt.com/create](https://chatgpt.com/create) and log in
 2. Click the **Configure** tab
