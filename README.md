@@ -165,7 +165,7 @@ To update: `cd ~/.claude/skills/thealgorithm && git pull && ./install.sh`
 
 The five-step Algorithm framework is from the book [*The Algorithm*](https://www.dvx.ventures/the-algorithm) by Jon McNeill. All intellectual property rights in the book, its contents, and the underlying framework belong to the author and/or publisher.
 
-This repository is an **independent, unofficial implementation** that encodes the publicly described concepts as AI prompts. It is not affiliated with, endorsed by, or sponsored by Jon McNeill, DVx Ventures, or the publisher of the book. If you find the framework useful, [buy the book](https://www.dvx.ventures/the-algorithm).
+This repository is an **independent implementation** that encodes the publicly described concepts as AI prompts. While the author works at a DVx Ventures portfolio company, this project is a personal initiative — not an official DVx Ventures product. If you find the framework useful, [buy the book](https://www.dvx.ventures/the-algorithm).
 
 ## Author
 
