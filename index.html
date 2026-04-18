@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Algorithm — For AI</title>
+<meta name="description" content="Jon McNeill's five-step Algorithm encoded as an AI skill. Works in Claude, ChatGPT, Claude Desktop, Vertex, and anywhere you can drop a markdown file.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  --orange: #e84820;
+  --cream: #f2ede4;
+  --ink: #0e0c0a;
+  --mid: #1c1916;
+  --warm-mid: #c4b8a8;
+  --muted: rgba(242,237,228,0.45);
+  --rule: rgba(242,237,228,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  font-family: 'Space Mono', monospace;
+  color: var(--cream);
+  overflow-x: hidden;
+}
+
+/* ── NOISE — fixed so it tiles across everything ── */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+  opacity:.04;
+  pointer-events:none;
+  z-index:1000;
+  mix-blend-mode:overlay;
+}
+
+/* ════════════════════════════════════════
+   HERO — full viewport, the endcard
+════════════════════════════════════════ */
+.hero {
+  height: 100vh;
+  min-height: 560px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  position: relative;
+  overflow: hidden;
+}
+
+canvas#dust {
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* grain */
+.grain {
+  position:absolute;inset:0;
+  pointer-events:none;z-index:10;
+  opacity:.025;
+  animation: grainShift .08s steps(1) infinite;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+}
+@keyframes grainShift{0%{background-position:0 0}25%{background-position:40px -30px}50%{background-position:-20px 50px}75%{background-position:60px 20px}}
+
+/* ── LEFT — orange panel ── */
+.hero-left {
+  background: var(--orange);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+  animation: leftIn 1s cubic-bezier(.16,1,.3,1) 0s both;
+  z-index:2;
+}
+@keyframes leftIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.hero-left::before {
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(-48deg,transparent,transparent 28px,rgba(255,160,60,.32) 28px,rgba(255,160,60,.32) 56px,transparent 56px,transparent 84px,rgba(140,40,5,.28) 84px,rgba(140,40,5,.28) 112px);
+}
+.hero-left::after {
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(0,0,0,.3) 1px,transparent 1px);
+  background-size:6px 6px;
+}
+.hero-left-inner {
+  position:relative;z-index:2;height:100%;
+  display:flex;flex-direction:column;
+  padding:40px 32px 40px 36px;
+}
+.bg-word {
+  position:absolute;bottom:-20px;left:-8px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:200px;line-height:1;
+  color:rgba(0,0,0,.07);letter-spacing:-4px;
+  white-space:nowrap;pointer-events:none;z-index:1;
+}
+.book-wrap {
+  flex:1;display:flex;align-items:center;justify-content:center;
+  animation:bookFade .8s ease-out .9s both;
+}
+@keyframes bookFade{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.book {
+  width:172px;background:var(--orange);
+  border:2px solid rgba(0,0,0,.35);
+  box-shadow:6px 6px 0 rgba(0,0,0,.45),inset -3px 0 8px rgba(0,0,0,.2);
+  position:relative;overflow:hidden;
+  clip-path:polygon(0 0,100% 0,100% 95%,93% 100%,0 100%);
+}
+.book::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-48deg,transparent,transparent 18px,rgba(255,160,60,.35) 18px,rgba(255,160,60,.35) 36px,transparent 36px,transparent 54px,rgba(140,40,5,.3) 54px,rgba(140,40,5,.3) 72px);}
+.book::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,.3) 1px,transparent 1px);background-size:5px 5px;}
+.book-inner {
+  position:relative;z-index:2;
+  padding:16px 14px 14px;
+  display:flex;flex-direction:column;min-height:240px;
+}
+.b-sub{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:.6px;line-height:1.3;color:rgba(0,0,0,.65);text-align:center;margin-bottom:auto;}
+.b-title{text-align:center;margin:16px 0;}
+.b-the{font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:1;color:#0a0300;letter-spacing:1px;display:block;}
+.b-algo{font-family:'Bebas Neue',sans-serif;font-size:43px;line-height:.92;color:#0a0300;letter-spacing:.5px;display:block;}
+.b-author{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:rgba(0,0,0,.55);text-align:center;margin-top:auto;}
+
+/* ── RIGHT — dark panel ── */
+.hero-right {
+  background:var(--ink);
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:44px 52px 40px 64px;
+  animation:rightIn 1s cubic-bezier(.16,1,.3,1) .1s both;
+}
+@keyframes rightIn{from{opacity:0}to{opacity:1}}
+.rule-top{position:absolute;top:0;left:64px;right:52px;height:3px;background:var(--orange);animation:ruleIn .6s ease-out .8s both;transform-origin:left;}
+.rule-bot{position:absolute;bottom:0;left:64px;right:52px;height:1px;background:var(--rule);animation:ruleIn .6s ease-out 1s both;transform-origin:left;}
+@keyframes ruleIn{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.top-label{display:flex;align-items:center;padding-top:8px;animation:fadeUp .5s ease-out .7s both;}
+.label-sep{flex:1;}
+.label-date{font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.15);}
+
+.title-block{flex:1;display:flex;flex-direction:column;justify-content:center;padding:20px 0;}
+.title-the{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:20px;color:rgba(255,255,255,.22);display:block;margin-bottom:0;animation:fadeUp .5s ease-out .9s both;}
+.title-algo{display:block;line-height:.88;margin-bottom:16px;animation:algoReveal 1s cubic-bezier(.16,1,.3,1) 1s both;position:relative;}
+@keyframes algoReveal{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.title-algo svg{width:100%;overflow:visible;display:block;}
+
+.slash-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;animation:fadeUp .4s ease-out 1.5s both;}
+.slash{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--orange);line-height:1;}
+.slash-line{flex:1;height:1px;background:rgba(255,255,255,.1);}
+
+.sub-row{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;animation:fadeUp .4s ease-out 1.6s both;}
+.sub-for{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;color:var(--orange);letter-spacing:2px;}
+.sub-ai{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;color:var(--cream);letter-spacing:4px;opacity:.9;}
+
+.steps{display:flex;gap:0;margin-bottom:0;animation:fadeUp .4s ease-out 1.7s both;}
+.step{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.35);padding:6px 14px 6px 0;border-right:1px solid rgba(255,255,255,.1);margin-right:14px;cursor:default;position:relative;transition:color .2s;}
+.step::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--orange);transition:width .3s;}
+.step:hover{color:rgba(255,255,255,.8);}
+.step:hover::after{width:calc(100% - 14px);}
+.step:last-child{border-right:none;margin-right:0;}
+.step:nth-child(1){animation:stepPulse 6s infinite 2s}
+.step:nth-child(2){animation:stepPulse 6s infinite 3s}
+.step:nth-child(3){animation:stepPulse 6s infinite 4s}
+.step:nth-child(4){animation:stepPulse 6s infinite 5s}
+.step:nth-child(5){animation:stepPulse 6s infinite 6s}
+@keyframes stepPulse{0%,12%,100%{color:rgba(255,255,255,.35)}4%,8%{color:var(--cream)}}
+
+.bottom-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;animation:fadeUp .4s ease-out 2s both;}
+.blurb-col{display:flex;flex-direction:column;gap:12px;max-width:340px;}
+.blurb-text{font-family:'Space Mono',monospace;font-size:12px;line-height:1.85;color:rgba(255,255,255,.45);letter-spacing:.3px;}
+.github-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:rgba(255,255,255,.5);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.5px;padding:9px 16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);transition:all .2s;width:fit-content;}
+.github-link:hover{border-color:var(--orange);color:var(--orange);background:rgba(232,72,32,.06);}
+.gh-icon{width:15px;height:15px;opacity:.6;fill:currentColor;flex-shrink:0;}
+.author-block{text-align:right;flex-shrink:0;}
+.author-name{display:block;font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:.95;letter-spacing:1px;color:var(--cream);text-decoration:none;margin-bottom:8px;transition:color .2s;}
+.author-name:hover{color:var(--orange);}
+.author-handle{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--orange);opacity:.8;margin-bottom:4px;}
+.author-site{display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.25);text-decoration:none;transition:color .2s;}
+.author-site:hover{color:rgba(255,255,255,.6);}
+
+/* scroll hint */
+.scroll-hint {
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  z-index:5;
+  animation:fadeUp .5s ease-out 2.8s both;
+  cursor:pointer;
+}
+.scroll-hint span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.scroll-arrow{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(232,72,32,.6));animation:arrowPulse 2s ease-in-out infinite;}
+@keyframes arrowPulse{0%,100%{opacity:.4;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ════════════════════════════════════════
+   SCROLL CONTENT
+════════════════════════════════════════ */
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Section base */
+.section {
+  padding: 96px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 64px;
+}
+
+.section-label {
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(232,72,32,.25);
+}
+
+/* ── WHAT IT IS ── */
+.what-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.what-left {
+  padding-right: 56px;
+  border-right: 1px solid var(--rule);
+}
+.what-right {
+  padding-left: 56px;
+}
+
+.big-statement {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  line-height: 1.0;
+  letter-spacing: 1px;
+  color: var(--cream);
+  margin-bottom: 24px;
+}
+.big-statement em {
+  color: var(--orange);
+  font-style: normal;
+}
+
+.body-text {
+  font-size: 13px;
+  line-height: 2;
+  color: rgba(242,237,228,.55);
+  margin-bottom: 20px;
+}
+.body-text + .body-text { margin-top: -4px; }
+
+/* ── THE FIVE STEPS ── */
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.step-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+  padding: 28px 0;
+  align-items: start;
+  transition: background .2s;
+}
+.step-row:last-child { border-bottom: 1px solid var(--rule); }
+.step-row:hover { background: rgba(232,72,32,.03); }
+
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  line-height: 1;
+  color: rgba(232,72,32,.35);
+  padding-top: 2px;
+}
+.step-content {}
+.step-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.step-rule {
+  font-size: 11px;
+  line-height: 1.9;
+  color: rgba(242,237,228,.4);
+  letter-spacing: .3px;
+}
+.step-rule strong {
+  color: rgba(242,237,228,.7);
+  font-weight: 700;
+}
+
+/* ── WHERE IT WORKS ── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.tool-card {
+  background: var(--ink);
+  padding: 28px 24px;
+  transition: background .2s;
+}
+.tool-card:hover { background: var(--mid); }
+.tool-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+.tool-desc {
+  font-size: 11px;
+  line-height: 1.85;
+  color: rgba(242,237,228,.35);
+  letter-spacing: .2px;
+}
+
+/* ── HOW TO USE ── */
+.usage-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  counter-reset: usage;
+}
+.usage-step {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 24px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  align-items: start;
+  counter-increment: usage;
+}
+.usage-step:last-child { border-bottom: 1px solid var(--rule); }
+.usage-n {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: rgba(232,72,32,.5);
+  padding-top: 2px;
+}
+.usage-body {}
+.usage-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 8px;
+  letter-spacing: .5px;
+}
+.usage-detail {
+  font-size: 12px;
+  line-height: 1.9;
+  color: rgba(242,237,228,.4);
+}
+
+.code-block {
+  background: var(--mid);
+  border: 1px solid rgba(255,255,255,.07);
+  border-left: 2px solid var(--orange);
+  padding: 14px 18px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: rgba(242,237,228,.65);
+  line-height: 1.7;
+  margin-top: 12px;
+  overflow-x: auto;
+}
+.code-block .cmd { color: var(--orange); }
+
+/* ── WHY ── */
+.quote-block {
+  border-left: 3px solid var(--orange);
+  padding: 6px 0 6px 28px;
+  margin-bottom: 36px;
+}
+.quote-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  line-height: 1.15;
+  color: var(--cream);
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+.quote-attr {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(242,237,228,.3);
+  text-transform: uppercase;
+}
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--rule);
+  padding: 40px 64px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.footer-left {}
+.footer-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+  color: var(--cream);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 4px;
+  transition: color .2s;
+}
+.footer-name:hover { color: var(--orange); }
+.footer-handle {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(232,72,32,.7);
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.footer-link {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(242,237,228,.25);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color .2s;
+}
+.footer-link:hover { color: var(--cream); }
+.footer-link svg { width:14px;height:14px;fill:currentColor;flex-shrink:0; }
+
+/* ── MOBILE ── */
+@media(max-width:700px){
+  .hero { grid-template-columns: 1fr; height:auto; min-height:100vh; }
+  .hero-left { display:none; }
+  .hero-right { padding:32px 24px 32px 24px; }
+  .rule-top,.rule-bot { left:24px;right:24px; }
+  .bottom-row { flex-direction:column;align-items:flex-start; }
+  .author-block { text-align:left; }
+  .section-inner { padding:0 24px; }
+  .what-grid { grid-template-columns:1fr; }
+  .what-left { padding-right:0;border-right:none;padding-bottom:40px;border-bottom:1px solid var(--rule); }
+  .what-right { padding-left:0;padding-top:40px; }
+  .tools-grid { grid-template-columns:1fr 1fr; }
+  .footer { flex-direction:column;align-items:flex-start;padding:40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero" id="top">
+  <canvas id="dust"></canvas>
+  <div class="grain"></div>
+
+  <div class="hero-left">
+    <div class="bg-word">ALG</div>
+    <div class="hero-left-inner">
+      <div class="book-wrap">
+        <div class="book">
+          <div class="book-inner">
+            <div class="b-sub">The Hypergrowth Formula That Transformed Tesla, Lululemon, General Motors, and SpaceX</div>
+            <div class="b-title"><span class="b-the">The</span><span class="b-algo">Algorithm</span></div>
+            <div class="b-author">Jon McNeill</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="rule-top"></div>
+    <div class="rule-bot"></div>
+
+    <div class="top-label">
+      <span class="label-sep"></span>
+      <span class="label-date">2026</span>
+    </div>
+
+    <div class="title-block">
+      <span class="title-the">The</span>
+
+      <div class="title-algo">
+        <svg viewBox="0 0 540 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".98"/>
+              <stop offset="22%" stop-color="#f2ede4"/>
+              <stop offset="55%" stop-color="#c4b8a8"/>
+              <stop offset="80%" stop-color="#7a6e62" stop-opacity=".9"/>
+              <stop offset="100%" stop-color="#2a2218" stop-opacity=".7"/>
+            </linearGradient>
+            <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3a1a08" stop-opacity=".8"/>
+              <stop offset="100%" stop-color="#0a0500" stop-opacity=".4"/>
+            </linearGradient>
+          </defs>
+          <text x="3" y="88" font-family="'Rajdhani',sans-serif" font-weight="700" font-size="90" letter-spacing="-2" fill="url(#sg)" transform="skewX(-3)">ALGORITHM</text>
+          <text x="0" y="85" font-family="'Rajdhani',sans-serif" font-weight="700" font-size="90" letter-spacing="-2" fill="url(#cg)" transform="skewX(-3)">ALGORITHM</text>
+          <line x1="0" y1="96" x2="36" y2="96" stroke="#e84820" stroke-width="3" stroke-linecap="square"/>
+        </svg>
+      </div>
+
+      <div class="slash-row">
+        <span class="slash">//</span>
+        <div class="slash-line"></div>
+      </div>
+
+      <div class="sub-row">
+        <span class="sub-for">For</span>
+        <span class="sub-ai">AI</span>
+      </div>
+
+      <div class="steps">
+        <div class="step">Question</div>
+        <div class="step">Delete</div>
+        <div class="step">Simplify</div>
+        <div class="step">Accelerate</div>
+        <div class="step">Automate</div>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="blurb-col">
+        <p class="blurb-text">Works in Claude Code, Claude Desktop,<br>ChatGPT, Vertex, your local AI — anywhere<br>you can drop a markdown file.</p>
+        <a class="github-link" href="https://github.com/jordanjoecooper/the-algorithm" target="_blank">
+          <svg class="gh-icon" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          github.com/jordanjoecooper/the-algorithm
+        </a>
+      </div>
+
+      <div class="author-block">
+        <a class="author-name" href="https://jordanjoecooper.com" target="_blank">Jordan<br>Joe Cooper</a>
+        <div class="author-handle">@jordanjoecooper</div>
+        <a class="author-site" href="https://jordanjoecooper.com" target="_blank">jordanjoecooper.com</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint" onclick="document.getElementById('what').scrollIntoView({behavior:'smooth'})">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ════════ CONTENT ════════ -->
+<div class="content">
+
+  <!-- WHAT IT IS -->
+  <section class="section" id="what">
+    <div class="section-inner">
+      <div class="section-label">What it is</div>
+      <div class="what-grid">
+        <div class="what-left">
+          <div class="big-statement">A mental model.<br><em>Encoded</em><br>as a skill.</div>
+          <p class="body-text">Jon McNeill's Algorithm is a five-step framework for building things that shouldn't exist — the version that actually works. He's used it at Tesla, Lululemon, SpaceX, GM. He's now using it at DVx, the venture firm he founded.</p>
+          <p class="body-text">Most AI tools make you faster at what you're already doing. This makes you stop and ask whether you should be doing it at all.</p>
+        </div>
+        <div class="what-right">
+          <p class="body-text">A skill is a markdown file — a set of instructions that gives an AI model a way of thinking, not just a task to complete. Drop it into any tool that accepts system prompts or project instructions and it changes how the model behaves.</p>
+          <p class="body-text">The difference between a prompt and a skill is the difference between asking someone to do something and teaching them how to think about it.</p>
+          <p class="body-text">The more context you give it — your documents, your conversation history, your notes — the harder it pushes back.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE FIVE STEPS -->
+  <section class="section" id="steps">
+    <div class="section-inner">
+      <div class="section-label">The five steps</div>
+      <div class="steps-list">
+        <div class="step-row">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-name">Question Every Requirement</div>
+            <div class="step-rule">Every requirement must have an owner and a reason. <strong>If you can't say who required it and why, it's suspect.</strong> Categories: Validated, Assumed, Inherited, Self-imposed. Most fall in the last three.</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-name">Delete Every Possible Step</div>
+            <div class="step-rule">Argue for removing everything. <strong>If you're not adding back 10% of what you deleted, you didn't delete enough.</strong> The most valuable cuts are the ones nobody thought were cuttable.</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-name">Simplify and Optimise</div>
+            <div class="step-rule"><strong>But not before steps 1 and 2.</strong> The most common mistake smart people make is optimising something that shouldn't exist. Simplification only works on things that have earned their place.</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-name">Accelerate Cycle Time</div>
+            <div class="step-rule">Find every wait, handoff, approval, and batch. <strong>But not before step 3.</strong> Don't speed up a bad process. The goal is shorter feedback loops on the right work.</div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-name">Automate</div>
+            <div class="step-rule"><strong>But not before step 4.</strong> Don't automate waste. Only automate what has survived all four prior steps. Automating too early locks in your mistakes at scale.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHERE IT WORKS -->
+  <section class="section" id="tools">
+    <div class="section-inner">
+      <div class="section-label">Where it works</div>
+      <p class="body-text" style="margin-bottom:32px;">The skill is a plain markdown file. It works anywhere you can provide system instructions or a project context — which is most modern AI tools.</p>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-name">Claude.ai</div>
+          <div class="tool-desc">Add to a Project's instructions. Every conversation in that project starts with The Algorithm loaded. Use /question, /delete, /algorithm slash commands.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Claude Desktop</div>
+          <div class="tool-desc">Add via MCP or project context. Connects to your actual files, Notion docs, Linear tickets — the skill runs against real context, not a document you pasted in.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Claude Code</div>
+          <div class="tool-desc">Drop the markdown into your CLAUDE.md. The skill becomes part of every session in that repo — particularly useful for questioning requirements before building.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">ChatGPT</div>
+          <div class="tool-desc">Paste into a Custom GPT system prompt, or seed it at the start of any conversation. Same framework, different model — useful for comparing how each one pushes back.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Vertex AI / API</div>
+          <div class="tool-desc">Pass as a system prompt in any API call. Works with Gemini, Claude on Vertex, or any model that accepts system instructions. Drop into your existing pipelines.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-name">Local AI</div>
+          <div class="tool-desc">Ollama, LM Studio, anything running locally — add as a system prompt. Useful for zero-cost iteration. The framework works regardless of model size.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW TO USE -->
+  <section class="section" id="usage">
+    <div class="section-inner">
+      <div class="section-label">How to use it</div>
+      <div class="usage-steps">
+        <div class="usage-step">
+          <div class="usage-n">1</div>
+          <div class="usage-body">
+            <div class="usage-title">Get the skill file</div>
+            <div class="usage-detail">Clone or download from GitHub. The skill lives in <code style="color:var(--orange);font-size:11px">the-algorithm.md</code>. That's the file you'll drop into tools.</div>
+            <div class="code-block"><span class="cmd">git clone</span> https://github.com/jordanjoecooper/the-algorithm</div>
+          </div>
+        </div>
+        <div class="usage-step">
+          <div class="usage-n">2</div>
+          <div class="usage-body">
+            <div class="usage-title">Load it into your tool</div>
+            <div class="usage-detail">Paste the contents into your system prompt, project instructions, or CLAUDE.md. The model will recognise the slash commands and framework immediately.</div>
+          </div>
+        </div>
+        <div class="usage-step">
+          <div class="usage-n">3</div>
+          <div class="usage-body">
+            <div class="usage-title">Give it something real to work on</div>
+            <div class="usage-detail">Upload a PRD, a process doc, a spec, a plan. The more context the better — the model needs something concrete to challenge, not a hypothetical.</div>
+          </div>
+        </div>
+        <div class="usage-step">
+          <div class="usage-n">4</div>
+          <div class="usage-body">
+            <div class="usage-title">Run a command</div>
+            <div class="usage-detail">Start with a quick diagnostic, then go deep on whichever step surfaces the most problems.</div>
+            <div class="code-block">
+              <span class="cmd">/score</span> — rapid health check, all five steps scored in 30 seconds<br>
+              <span class="cmd">/question</span> — full Step 1 requirements audit<br>
+              <span class="cmd">/delete</span> — Step 2 deletion table<br>
+              <span class="cmd">/algorithm</span> — full five-step run
+            </div>
+          </div>
+        </div>
+        <div class="usage-step">
+          <div class="usage-n">5</div>
+          <div class="usage-body">
+            <div class="usage-title">Hook in more context</div>
+            <div class="usage-detail">The output quality scales with context. In Claude Desktop, connect it to your Notion, Linear, or local files. The skill is much sharper when it's working from the real situation — the Slack thread where scope crept, the ticket that's been open for three weeks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">
+      <a class="footer-name" href="https://jordanjoecooper.com" target="_blank">Jordan Joe Cooper</a>
+      <div class="footer-handle">@jordanjoecooper</div>
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="https://github.com/jordanjoecooper/the-algorithm" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+      <a class="footer-link" href="https://jordanjoecooper.com" target="_blank">Website</a>
+      <a class="footer-link" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* dust particles */
+const cv = document.getElementById('dust');
+const cx = cv.getContext('2d');
+function rsz(){ cv.width=window.innerWidth; cv.height=window.innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+const pts = Array.from({length:30},()=>({
+  x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+  r:Math.random()*1.2+.2, vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.15-.08,
+  op:Math.random()*.16+.03, col:Math.random()>.6?'232,72,32':'242,237,228'
+}));
+function tick(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(${p.col},${p.op})`;cx.fill();
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<-4)p.x=cv.width+4; if(p.x>cv.width+4)p.x=-4;
+    if(p.y<-4)p.y=cv.height+4; if(p.y>cv.height+4)p.y=-4;
+  });
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* Fade in sections on scroll */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+  });
+}, {threshold:0.1});
+
+document.querySelectorAll('.section, footer').forEach(el => {
+  el.style.opacity='0';
+  el.style.transform='translateY(24px)';
+  el.style.transition='opacity .7s ease, transform .7s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
