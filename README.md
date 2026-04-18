@@ -36,9 +36,107 @@ Or set it up in your own tool:
 
 **[Setup guide and website](https://jordanjoecooper.github.io/the-algorithm)** — step-by-step instructions for each platform. Or see the [text guide](GUIDE.md).
 
+## Getting the Best Results
+
+The Algorithm works best when you give it **real things to chew on** — not abstract questions, but actual documents, processes, plans, and data from your work. The more concrete the input, the more useful the output.
+
+### What to feed it
+
+- **Documents:** Product specs, PRDs, project plans, strategy decks, SOPs
+- **Process maps:** Your actual steps from start to finish — hiring pipelines, deploy workflows, sales cycles, support escalation paths
+- **Feature lists:** Your real backlog, roadmap, or v2 scope — not a summary, the actual list
+- **Messages and conversations:** Slack threads, email chains, meeting notes where decisions were made (or avoided)
+- **Diagrams and architecture:** System diagrams, org charts, workflow diagrams, database schemas
+- **Financial data:** Pricing structures, cost breakdowns, budget allocations
+- **Code:** Actual repos, modules, config files — not descriptions of code
+
+The more real context you provide, the better the analysis. A vague "optimize our onboarding" gets a generic answer. Pasting your actual onboarding flow with every step, email, wait time, and handoff gets a specific, actionable breakdown.
+
+### Examples
+
+**Score a real process:**
+```
+Here's our customer onboarding flow:
+1. Sales closes deal (day 0)
+2. Sales emails CS team with deal details (day 0-2, depends when they get to it)
+3. CS creates account in admin panel (day 2-3)
+4. CS sends welcome email with login credentials (day 3)
+5. Customer schedules kickoff call (day 3-7, they pick a time)
+6. Kickoff call — walk through the product (day 7-10)
+7. CS sends follow-up with action items (day 10-11)
+8. Customer completes setup tasks (day 11-14, usually stalls here)
+9. CS checks in to see if they need help (day 14)
+10. Customer reaches "first value" (day 14-21)
+
+We're losing 30% of customers before step 6. Score this against The Algorithm.
+```
+
+**Question requirements from a real document:**
+```
+Here's our PRD for the new billing system. Challenge every requirement in it:
+[paste the actual PRD]
+```
+
+**Delete from a real feature list:**
+```
+Here's our v2 roadmap — 23 features across 4 workstreams. What can we cut?
+[paste the actual feature list with descriptions]
+```
+
+**Simplify a real pricing structure:**
+```
+Our pricing has 4 tiers, 3 add-ons, annual/monthly billing, and custom enterprise deals.
+[paste pricing tiers, rules, add-ons, discount logic, enterprise exceptions]
+Simplify it.
+```
+
+**Accelerate a real hiring pipeline:**
+```
+Our engineering hiring process:
+- Recruiter screen (30 min, scheduled within 3 days of application)
+- Hiring manager screen (45 min, scheduled within 5 days)
+- Take-home assignment (sent after HM screen, 7-day deadline, most take 5 days)
+- Technical panel (3 engineers, 2 hours, scheduling takes 5-7 days)
+- Culture fit interview (VP Eng, 45 min, usually 2-3 days after panel)
+- Reference checks (3 references, takes 3-5 days)
+- Offer review committee (meets Thursdays)
+- Offer letter sent (1-2 days after committee)
+
+Total: 5-7 weeks. We're losing candidates to faster companies. How do we accelerate this?
+```
+
+**Automate real manual work:**
+```
+Every Monday our ops team does this:
+1. Pull sales data from Salesforce (export CSV)
+2. Pull usage data from our analytics dashboard (export CSV)
+3. Pull support tickets from Zendesk (export CSV)
+4. Open last week's Google Sheet template, paste all three CSVs
+5. Manually reconcile customer names across all three sources
+6. Build 4 charts in the sheet
+7. Write a 3-paragraph summary of trends
+8. Email it to the exec team
+9. Post a shorter version in #leadership Slack channel
+
+Takes 3-4 hours every Monday morning. What should we automate?
+```
+
+### Tips for better results
+
+- **Paste the real thing**, not a description of it. "Our onboarding has too many steps" is less useful than pasting the actual 12-step flow.
+- **Include the messy details.** The exceptions, the workarounds, the "we know this is bad but..." — that's where the biggest wins hide.
+- **Name the people.** "Marketing requires this" is weaker than "Sarah in Marketing requested this in Q2 because of the rebrand." Requirements without names are the first to challenge.
+- **Include timing.** How long does each step take? Where does work sit idle? The wait times between steps are usually bigger than the steps themselves.
+
+### The Cardinal Rule
+
+The steps are sequential for a reason. Never optimize before deleting. Never automate before simplifying. The discipline IS the method.
+
+If you try to skip ahead, the AI will push back — politely, but firmly. You can override it. You're the operator. But the warning exists because the most common failure mode is jumping to solutions before understanding the problem.
+
 ## Claude Code
 
-If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), you can install The Algorithm as native slash commands.
+If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), you can install The Algorithm as native slash commands for a more integrated experience.
 
 ### Install
 
@@ -63,127 +161,16 @@ To update: `cd ~/.claude/skills/thealgorithm && git pull && ./install.sh`
 | `/automate` | 5 | Identify automation. Assesses what should be automated, what should stay manual. |
 | `/score` | — | Quick diagnostic. Scores against all 5 steps, identifies the weakest link. |
 
-### Usage
+## Attribution
 
-The Algorithm works best when you give it **real things to chew on** — not abstract questions, but actual documents, processes, plans, and data from your work. The more concrete the input, the more useful the output.
+The five-step Algorithm framework is from the book [*The Algorithm*](https://www.dvx.ventures/the-algorithm) by Jon McNeill. All intellectual property rights in the book, its contents, and the underlying framework belong to the author and/or publisher.
 
-#### What to feed it
-
-- **Documents:** Product specs, PRDs, project plans, strategy decks, SOPs
-- **Process maps:** Your actual steps from start to finish — hiring pipelines, deploy workflows, sales cycles, support escalation paths
-- **Feature lists:** Your real backlog, roadmap, or v2 scope — not a summary, the actual list
-- **Messages and conversations:** Slack threads, email chains, meeting notes where decisions were made (or avoided)
-- **Diagrams and architecture:** System diagrams, org charts, workflow diagrams, database schemas
-- **Financial data:** Pricing structures, cost breakdowns, budget allocations
-- **Code:** Actual repos, modules, config files — not descriptions of code
-
-The more real context you provide, the better the analysis. A vague "optimize our onboarding" gets a generic answer. Pasting your actual onboarding flow with every step, email, wait time, and handoff gets a specific, actionable breakdown.
-
-#### Examples
-
-**Score a real process:**
-```
-> /score
-
-Here's our customer onboarding flow:
-1. Sales closes deal (day 0)
-2. Sales emails CS team with deal details (day 0-2, depends when they get to it)
-3. CS creates account in admin panel (day 2-3)
-4. CS sends welcome email with login credentials (day 3)
-5. Customer schedules kickoff call (day 3-7, they pick a time)
-6. Kickoff call — walk through the product (day 7-10)
-7. CS sends follow-up with action items (day 10-11)
-8. Customer completes setup tasks (day 11-14, usually stalls here)
-9. CS checks in to see if they need help (day 14)
-10. Customer reaches "first value" (day 14-21)
-
-We're losing 30% of customers before step 6.
-```
-
-**Run the full Algorithm on a real deploy pipeline:**
-```
-> /algorithm
-
-Here's our deploy process — I'm pasting the actual CI config and runbook:
-[paste your CI/CD config, deploy scripts, or step-by-step runbook]
-```
-
-**Question requirements from a real document:**
-```
-> /question
-
-Here's our PRD for the new billing system. Challenge every requirement in it:
-[paste the actual PRD]
-```
-
-**Delete from a real feature list:**
-```
-> /delete
-
-Here's our v2 roadmap — 23 features across 4 workstreams. What can we cut?
-[paste the actual feature list with descriptions]
-```
-
-**Simplify a real pricing structure:**
-```
-> /simplify
-
-Here's our current pricing page and the internal pricing logic:
-[paste pricing tiers, rules, add-ons, discount logic, enterprise exceptions]
-```
-
-**Accelerate a real hiring pipeline:**
-```
-> /accelerate
-
-Our engineering hiring process:
-- Recruiter screen (30 min, scheduled within 3 days of application)
-- Hiring manager screen (45 min, scheduled within 5 days)
-- Take-home assignment (sent after HM screen, 7-day deadline, most take 5 days)
-- Technical panel (3 engineers, 2 hours, scheduling takes 5-7 days)
-- Culture fit interview (VP Eng, 45 min, usually 2-3 days after panel)
-- Reference checks (3 references, takes 3-5 days)
-- Offer review committee (meets Thursdays)
-- Offer letter sent (1-2 days after committee)
-
-Total: 5-7 weeks. We're losing candidates to faster companies.
-```
-
-**Automate real manual work:**
-```
-> /automate
-
-Every Monday our ops team does this:
-1. Pull sales data from Salesforce (export CSV)
-2. Pull usage data from our analytics dashboard (export CSV)
-3. Pull support tickets from Zendesk (export CSV)
-4. Open last week's Google Sheet template, paste all three CSVs
-5. Manually reconcile customer names across all three sources
-6. Build 4 charts in the sheet
-7. Write a 3-paragraph summary of trends
-8. Email it to the exec team
-9. Post a shorter version in #leadership Slack channel
-
-Takes 3-4 hours every Monday morning.
-```
-
-#### Tips for better results
-
-- **Paste the real thing**, not a description of it. "Our onboarding has too many steps" is less useful than pasting the actual 12-step flow.
-- **Include the messy details.** The exceptions, the workarounds, the "we know this is bad but..." — that's where the biggest wins hide.
-- **Name the people.** "Marketing requires this" is weaker than "Sarah in Marketing requested this in Q2 because of the rebrand." Requirements without names are the first to challenge.
-- **Include timing.** How long does each step take? Where does work sit idle? The wait times between steps are usually bigger than the steps themselves.
-
-### The Cardinal Rule
-
-The steps are sequential for a reason. Never optimize before deleting. Never automate before simplifying. The discipline IS the method.
-
-If you try to skip ahead, the skills will push back — politely, but firmly. You can override them. You're the operator. But the warning exists because the most common failure mode is jumping to solutions before understanding the problem.
+This repository is an **independent, unofficial implementation** that encodes the publicly described concepts as AI prompts. It is not affiliated with, endorsed by, or sponsored by Jon McNeill, DVx Ventures, or the publisher of the book. If you find the framework useful, [buy the book](https://www.dvx.ventures/the-algorithm).
 
 ## Author
 
-Made by [jordanjoecooper](https://github.com/jordanjoecooper). The ideas here are not my own. Any mistake in representing them is mine alone.
+Made by [jordanjoecooper](https://github.com/jordanjoecooper).
 
 ## License
 
-MIT
+The code in this repository (prompt files, scripts, HTML) is released under the [MIT License](LICENSE). This license applies only to the software implementation — it does not grant any rights to the underlying intellectual property of *The Algorithm* by Jon McNeill.
