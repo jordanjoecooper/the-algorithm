@@ -10,7 +10,7 @@ Elon called it The Algorithm. Jon and his teams applied it obsessively — on th
 
 The power is in the sequence. Almost everyone starts at step 3 (optimize) or step 5 (automate). They pour effort into making bad processes faster or automating things that shouldn't exist. The Algorithm forces you to question first, delete second, simplify third. By the time you reach automation, you're automating something worth automating.
 
-This repo turns that framework into a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill pack you can run right now — AI does the heavy analytical work, you bring the context and judgment.
+This repo turns that framework into an AI skill you can use right now — AI does the heavy analytical work, you bring the context and judgment.
 
 ## The Five Steps
 
@@ -22,9 +22,23 @@ Five steps. In order. Every time.
 4. **Accelerate cycle time.** But not before step 3. Don't speed up a bad process.
 5. **Automate.** But not before step 4. Don't automate waste.
 
-This is a [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill pack that turns The Algorithm into a structured, repeatable workflow you can run on any problem — product, process, strategy, operations, or code.
+## Use with Any AI Tool
 
-## Install
+Works with **Claude**, **ChatGPT**, **Gemini**, or any AI tool that accepts custom instructions.
+
+1. Download [`dist/the-algorithm.md`](dist/the-algorithm.md)
+2. Upload it or paste it into your AI tool
+3. Give it real documents, processes, and data to work on
+
+**[Setup guide and website](https://jordanjoecooper.github.io/the-algorithm)** — step-by-step instructions for each platform, with screenshots.
+
+Or see the [text guide](GUIDE.md) if you prefer markdown.
+
+## Claude Code
+
+If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), you can install The Algorithm as native slash commands.
+
+### Install
 
 ```bash
 git clone https://github.com/jordanjoecooper/the-algorithm.git ~/.claude/skills/thealgorithm
@@ -35,7 +49,7 @@ No dependencies. No build step. The install script creates symlinks so Claude Co
 
 To update: `cd ~/.claude/skills/thealgorithm && git pull && ./install.sh`
 
-## Skills
+### Skills
 
 | Command | Step | What it does |
 |---------|------|-------------|
@@ -47,11 +61,11 @@ To update: `cd ~/.claude/skills/thealgorithm && git pull && ./install.sh`
 | `/automate` | 5 | Identify automation. Assesses what should be automated, what should stay manual. |
 | `/score` | — | Quick diagnostic. Scores against all 5 steps, identifies the weakest link. |
 
-## Usage
+### Usage
 
 The Algorithm works best when you give it **real things to chew on** — not abstract questions, but actual documents, processes, plans, and data from your work. The more concrete the input, the more useful the output.
 
-### What to feed it
+#### What to feed it
 
 - **Documents:** Product specs, PRDs, project plans, strategy decks, SOPs
 - **Process maps:** Your actual steps from start to finish — hiring pipelines, deploy workflows, sales cycles, support escalation paths
@@ -63,7 +77,7 @@ The Algorithm works best when you give it **real things to chew on** — not abs
 
 The more real context you provide, the better the analysis. A vague "optimize our onboarding" gets a generic answer. Pasting your actual onboarding flow with every step, email, wait time, and handoff gets a specific, actionable breakdown.
 
-### Examples
+#### Examples
 
 **Score a real process:**
 ```
@@ -151,38 +165,18 @@ Every Monday our ops team does this:
 Takes 3-4 hours every Monday morning.
 ```
 
-### Tips for better results
+#### Tips for better results
 
 - **Paste the real thing**, not a description of it. "Our onboarding has too many steps" is less useful than pasting the actual 12-step flow.
 - **Include the messy details.** The exceptions, the workarounds, the "we know this is bad but..." — that's where the biggest wins hide.
 - **Name the people.** "Marketing requires this" is weaker than "Sarah in Marketing requested this in Q2 because of the rebrand." Requirements without names are the first to challenge.
 - **Include timing.** How long does each step take? Where does work sit idle? The wait times between steps are usually bigger than the steps themselves.
 
-## The Cardinal Rule
+### The Cardinal Rule
 
 The steps are sequential for a reason. Never optimize before deleting. Never automate before simplifying. The discipline IS the method.
 
 If you try to skip ahead, the skills will push back — politely, but firmly. You can override them. You're the operator. But the warning exists because the most common failure mode is jumping to solutions before understanding the problem.
-
-## Use with Any AI Tool
-
-Don't use Claude Code? You can use The Algorithm with **Claude**, **ChatGPT**, **Gemini**, or any AI chat tool.
-
-1. Download [`dist/the-algorithm.md`](dist/the-algorithm.md)
-2. Upload it or paste it into your AI tool's custom instructions
-3. Give it real documents, processes, and data to analyze
-
-See the **[Setup Guide](GUIDE.md)** for step-by-step instructions for each platform.
-
-## Works With
-
-Anything you can describe, paste, or upload:
-
-- **Product decisions:** Paste your PRD, feature list, or roadmap. Should we build this? What can we cut?
-- **Process bottlenecks:** Paste your workflow, runbook, or SOP. Where are we wasting time?
-- **Strategy questions:** Paste your strategy doc or OKRs. Are we doing the right things?
-- **Code and architecture:** Point it at your repo or paste your system diagram. What's too complex?
-- **Operations:** Paste your manual runbook or describe your weekly rituals. What should we stop doing?
 
 ## Author
 
